@@ -24,7 +24,7 @@ const CoursController = {
 
       console.log('Cours récupéré:', cours);
 
-      // Utiliser map pour extraire les noms et prénoms des étudiants
+      
       const etudiantsAvecNomPrenom = await Promise.all(cours.etudiantsInscrits.map(async (etudiant) => {
         const etudiantDetails = await Etudiant.findById(etudiant);
         return {
@@ -62,37 +62,39 @@ const CoursController = {
   },
 
   createCours: async (req, res) => {
-    const { coursId, nom, description, prix, etudiantId } = req.body;
-  
+    const { coursId, nom, description, prix, etudiantId, image, categorieId } = req.body;
+
     try {
       let nouveauCours;
-  
+
       if (etudiantId) {
-        // Si un étudiant est fourni, inscrire cet étudiant au cours
         const etudiant = await Etudiant.findById(etudiantId);
-  
+
         if (!etudiant) {
           return res.status(404).send('Etudiant non trouvé');
         }
-  
+
         nouveauCours = await Cours.create({
           coursId,
           nom,
           description,
           prix,
+          image,
           etudiantsInscrits: [etudiantId],
+          categorie: categorieId ? categorieId : null,
         });
       } else {
-       
         nouveauCours = await Cours.create({
           coursId,
           nom,
           description,
           prix,
+          image,
           etudiantsInscrits: [],
+          categorie: categorieId ? categorieId : null,
         });
       }
-  
+
       res.status(201).json(nouveauCours);
     } catch (error) {
       console.error(error);
@@ -157,10 +159,10 @@ const CoursController = {
         return res.status(404).send('Etudiant non trouvé');
       }
 
-      // Ajoutez l'ID de l'étudiant à la liste des étudiants inscrits
+      
       cours.etudiantsInscrits.push(etudiantId);
 
-      // Enregistrez les modifications dans la base de données
+     
       await cours.save();
 
       res.status(200).json(cours);

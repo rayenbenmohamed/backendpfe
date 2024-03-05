@@ -1,4 +1,4 @@
-// models/Cours.js
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -19,6 +19,9 @@ const coursSchema = new Schema({
   prix: {
     type: Number,
     required: true,
+  },
+  image: {
+    type: String, 
   },
   etudiantsInscrits: [{
     type: Schema.Types.ObjectId,

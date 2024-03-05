@@ -28,12 +28,8 @@ const etudiantSchema = new Schema({
     type: String,
     unique: true,
   },
-  // Ne pas inclure la référence à l'inscription
-  // inscription: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Inscription',
-  // },
-  // Ajoutez d'autres attributs selon les besoins
+ 
+
 });
 
 const Etudiant = mongoose.model('Etudiant', etudiantSchema);

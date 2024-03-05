@@ -1,4 +1,4 @@
-// Enseignant.controller.js
+
 
 const Enseignant = require('../models/Enseignant');
 

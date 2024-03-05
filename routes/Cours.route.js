@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CoursController = require('../controllers/Cours.controller');
 
-// Routes pour les cours
+
 router.get('/cours', CoursController.getAllCours);
 router.get('/cours/:id', CoursController.getCoursById);
 router.post('/cours', CoursController.createCours);
