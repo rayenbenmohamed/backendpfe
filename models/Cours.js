@@ -31,6 +31,10 @@ const coursSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Emploi',
   }],
+  categorie: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Categorie',
+  }],
 });
 
 const Cours = mongoose.model('Cours', coursSchema);
