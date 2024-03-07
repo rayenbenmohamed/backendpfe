@@ -8,7 +8,6 @@ const etudiantSchema = new Schema({
     unique: true,
     index: true,
     default: 1,
-    
   },
   nom: {
     type: String,
@@ -18,8 +17,9 @@ const etudiantSchema = new Schema({
     type: String,
     required: true,
   },
-  age: {
-    type: Number,
+  date_naissance: {
+    type: Date,
+    required: true
   },
   numTel: {
     type: String,
@@ -28,9 +28,15 @@ const etudiantSchema = new Schema({
     type: String,
     unique: true,
   },
- 
-
+  cin: {
+    type: String, 
+    unique: true,
+  },
+  niveauScolaire: {
+    type: String, 
+  },
 });
+
 
 const Etudiant = mongoose.model('Etudiant', etudiantSchema);
 

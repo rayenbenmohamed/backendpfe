@@ -31,7 +31,7 @@ const EtudiantController = {
   },
 
   createEtudiant: async (req, res) => {
-    const { nom, prenom, age, numTel, email } = req.body;
+    const { nom, prenom, date_naissance, numTel, email, cin, niveauScolaire } = req.body;
 
     try {
         const dernierEtudiant = await Etudiant.findOne({}, {}, { sort: { 'etudiantId': -1 } });
@@ -39,9 +39,11 @@ const EtudiantController = {
             etudiantId: dernierEtudiant ? dernierEtudiant.etudiantId + 1 : 1,
             nom,
             prenom,
-            age,
+            date_naissance,
             numTel,
             email,
+            cin,
+            niveauScolaire,
         });
 
         res.status(201).json(nouvelEtudiant);
@@ -57,15 +59,17 @@ const EtudiantController = {
 
 updateEtudiant: async (req, res) => {
   const id = req.params.id;
-  const { nom, prenom, age, numTel, email } = req.body;
+  const { nom, prenom, date_naissance, numTel, email, cin, niveauScolaire } = req.body;
 
   try {
       const etudiantMaj = await Etudiant.findByIdAndUpdate(id, {
           nom,
           prenom,
-          age,
+          date_naissance,
           numTel,
           email,
+          cin,
+          niveauScolaire,
       }, { new: true });
 
       if (etudiantMaj) {
@@ -91,6 +95,7 @@ deleteEtudiant: async (req, res) => {
       } else {
           res.status(404).send('Etudiant non trouvé');
       }
+      
   } catch (error) {
       console.error(error);
       res.status(500).send('Erreur serveur');

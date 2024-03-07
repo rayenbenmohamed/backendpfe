@@ -3,9 +3,11 @@ const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const EtudiantRoutes = require('./routes/Etudiant.route');
 const EnseignantRoutes = require('./routes/Enseignant.route');
-const CoursRouter = require('./routes/Cours.route');
+
 const EmploiRouter = require('./routes/Emploi.route');
-const ControllerRoute=require('./routes/Categorie.route');
+const CategorieRoute=require('./routes/Categorie.route');
+const FormationRoute=require('./routes/Formations.route');
+const ModuleRoute=require('./routes/Module.route');
 
 require('dotenv').config();
 
@@ -20,9 +22,11 @@ app.use(bodyParser.json());
 
 app.use('/api', EtudiantRoutes);
 app.use('/api', EnseignantRoutes);
-app.use('/api', CoursRouter);
+
 app.use('/api', EmploiRouter);
-app.use('/api',ControllerRoute);
+app.use('/api',CategorieRoute);
+app.use('/api',FormationRoute);
+app.use('/api',ModuleRoute);
 
   
 
