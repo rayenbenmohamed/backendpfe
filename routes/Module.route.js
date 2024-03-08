@@ -16,5 +16,8 @@ router.put('/modules/:id', moduleController.updateModule);
 
 
 router.delete('/modules/:id', moduleController.deleteModule);
+router.post('/modules/:moduleId/addStudent/:etudiantId', moduleController.addStudentToGroup);
+router.delete('/modules/:moduleId/students/:etudiantId', moduleController.removeStudentFromGroup);
+
 
 module.exports = router;

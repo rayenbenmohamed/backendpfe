@@ -1,6 +1,7 @@
 const Module = require('../models/Module');
 const Enseignant = require('../models/Enseignant');
 const Formation = require('../models/Formation');
+const Etudiant = require('../models/Etudiant')
 
 const ModuleController = {
   getAllModules: async (req, res) => {
@@ -98,6 +99,135 @@ const ModuleController = {
       res.status(500).send('Erreur serveur');
     }
   },
+  addStudentToGroup: async (req, res) => {
+    const moduleId = req.params.moduleId;
+    const etudiantId = req.params.etudiantId;
+
+    try {
+        const module = await Module.findById(moduleId);
+
+        if (!module) {
+            return res.status(404).send('Module non trouvé');
+        }
+
+        const etudiant = await Etudiant.findById(etudiantId);
+
+        if (!etudiant) {
+            return res.status(404).send('Étudiant non trouvé');
+        }
+
+        // Vérifier si l'étudiant est déjà dans la liste des étudiants du module
+        if (!module.etudiants.includes(etudiant._id)) {
+            // Ajouter l'étudiant au groupe (par exemple, le groupe est la propriété 'etudiants' du module)
+            module.etudiants = module.etudiants || [];
+            module.etudiants.push(etudiant._id);
+
+            // Vérifier si la formation du module est déjà dans la liste des formations de l'étudiant
+            if (!etudiant.formations.includes(module.formations)) {
+                // Ajouter la formation du module à la liste des formations de l'étudiant
+                etudiant.formations = etudiant.formations || [];
+                etudiant.formations.push(module.formations);
+            }
+
+            await module.save();
+            await etudiant.save();
+
+            res.status(200).json(module);
+        } else {
+            // Si l'étudiant est déjà dans la liste, renvoyer un message approprié
+            res.status(200).send('L\'étudiant est déjà dans le groupe');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erreur serveur');
+    }
+},
+
+
+removeStudentFromGroup: async (req, res) => {
+  const moduleId = req.params.moduleId;
+  const etudiantId = req.params.etudiantId;
+
+  try {
+      const module = await Module.findById(moduleId);
+
+      if (!module) {
+          return res.status(404).send('Module non trouvé');
+      }
+
+      const etudiant = await Etudiant.findById(etudiantId);
+
+      if (!etudiant) {
+          return res.status(404).send('Étudiant non trouvé');
+      }
+
+      // Vérifier si l'étudiant est dans la liste des étudiants du module
+      const studentIndex = module.etudiants.indexOf(etudiant._id);
+      if (studentIndex !== -1) {
+          // Retirer l'étudiant du groupe
+          module.etudiants.splice(studentIndex, 1);
+
+          // Retirer la formation du module de la liste des formations de l'étudiant
+          const formationIndex = etudiant.formations.indexOf(module.formations);
+          if (formationIndex !== -1) {
+              etudiant.formations.splice(formationIndex, 1);
+          }
+
+          await module.save();
+          await etudiant.save();
+
+          res.status(200).json(module);
+      } else {
+          // Si l'étudiant n'est pas dans la liste, renvoyer un message approprié
+          res.status(404).send('L\'étudiant n\'est pas dans le groupe');
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Erreur serveur');
+  }
+},
+
+  
+  
+  getModulesByEtudiantId: async (req, res) => {
+    const etudiantId = req.params.etudiantId;
+  
+    try {
+      const modules = await Module.find({ etudiants: etudiantId })
+        .populate({
+          path: 'etudiants',
+          populate: {
+            path: 'formations',
+            model: 'Formation',
+          },
+        })
+        .populate('enseignant')
+        .populate('emplois');
+  
+      const formattedModules = modules.map(module => ({
+        _id: module._id,
+        nomModule: module.nomModule,
+        enseignant: module.enseignant,
+        formations: module.etudiants.map(etudiant => etudiant.formations).flat().map(formation => ({
+          _id: formation._id,
+          nomformation: formation.nomformation,
+          duree: formation.duree,
+          description: formation.description,
+          prix: formation.prix,
+          image: formation.image,
+          niveau: formation.niveau,
+          categorie: formation.categorie,
+        })),
+        emplois: module.emplois,
+      }));
+  
+      res.status(200).json(formattedModules);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Erreur serveur');
+    }
+  },
+  
 
   deleteModule: async (req, res) => {
     const id = req.params.id;

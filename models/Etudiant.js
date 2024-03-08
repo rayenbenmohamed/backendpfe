@@ -4,10 +4,7 @@ const Schema = mongoose.Schema;
 const etudiantSchema = new Schema({
   etudiantId: {
     type: Number,
-    required: true,
-    unique: true,
-    index: true,
-    default: 1,
+   
   },
   nom: {
     type: String,
@@ -34,6 +31,16 @@ const etudiantSchema = new Schema({
   },
   niveauScolaire: {
     type: String, 
+  },
+  formations: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Formation',
+    },
+  ],
+  compte: {
+    type: Schema.Types.ObjectId,
+    ref: 'Compte',
   },
 });
 
