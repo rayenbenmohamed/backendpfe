@@ -32,6 +32,10 @@ const etudiantSchema = new Schema({
   niveauScolaire: {
     type: String, 
   },
+  montanAtpaye:{
+    type: Number,
+    
+  },
   formations: [
     {
       type: Schema.Types.ObjectId,

@@ -7,5 +7,6 @@ router.get('/formations/:id', FormationController.getFormationById);
 router.post('/formations', FormationController.createFormation);
 router.put('/formations/:id', FormationController.updateFormation);
 router.delete('/formations/:id', FormationController.deleteFormation);
+router.get('/formations/categorie/:categorieId', FormationController.getFormationsByCategorie);
 
 module.exports = router;

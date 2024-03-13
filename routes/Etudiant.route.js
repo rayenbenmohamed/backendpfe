@@ -19,7 +19,7 @@ const Modulecontroller=require('../controllers/Module.controller');
  router.get('/etudiants/formation/:compteId', Etudiantcontroller.getFormationByCompte);
  router.get('/etudiants/byCompte/:compteId', Etudiantcontroller.getEtudiantByCompte);
  router.get('/modules/byEtudiant/:etudiantId', Modulecontroller.getModulesByEtudiantId);
- //router.get('/etudiants/formations/:compteId', Etudiantcontroller.getFormationByCompte);
+
  router.post('/etudiants/:etudiantId/formations', Etudiantcontroller.addFormationToEtudiant);
 
  

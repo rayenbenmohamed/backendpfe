@@ -70,6 +70,23 @@ const FormationController = {
       res.status(500).send('Erreur serveur');
     }
   },
+  getFormationsByCategorie: async (req, res) => {
+    const categorieId = req.params.categorieId;
+
+    try {
+      const formations = await Formation.find({ categorie: categorieId }).populate('categorie');
+
+      if (formations.length > 0) {
+        res.status(200).json(formations);
+      } else {
+        res.status(404).send('Aucune formation trouvée pour cette catégorie');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Erreur serveur');
+    }
+  },
+
 
   deleteFormation: async (req, res) => {
     const id = req.params.id;

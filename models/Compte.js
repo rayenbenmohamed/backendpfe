@@ -15,6 +15,11 @@ const compteSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    enum: ['candidat', 'formateur', 'admin'],
+    default: 'candidat',
+  },
 });
 
 const Compte = mongoose.model('Compte', compteSchema);

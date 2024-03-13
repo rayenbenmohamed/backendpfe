@@ -135,7 +135,7 @@ const EtudiantController = {
         niveauScolaire,
       });
 
-      // Créer un compte associé à l'étudiant
+      
       const nouveauCompte = await Compte.create({
         nomUtilisateur: email,
         motDePasse: 'motDePasseAleatoire',
