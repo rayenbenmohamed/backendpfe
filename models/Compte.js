@@ -1,27 +1,30 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+  const mongoose = require('mongoose');
+  const Schema = mongoose.Schema;
 
-const compteSchema = new Schema({
-  nomUtilisateur: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  motDePasse: {
-    type: String,
-    required: true,
-  },
-  estActive: {
-    type: Boolean,
-    default: false,
-  },
-  role: {
-    type: String,
-    enum: ['candidat', 'formateur', 'admin'],
-    default: 'candidat',
-  },
-});
+  const compteSchema = new Schema({
+    nomUtilisateur: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    motDePasse: {
+      type: String,
+      required: true,
+    },
+    estActive: {
+      type: Boolean,
+      default: true,
+    },
+    role: {
+      type: String,
+      enum: ['candidat', 'formateur', 'admin'],
+      default: 'candidat',
+    },
+    token: {
+      type: String,
+      default: null }
+  });
 
-const Compte = mongoose.model('Compte', compteSchema);
+  const Compte = mongoose.model('Compte', compteSchema);
 
-module.exports = Compte;
+  module.exports = Compte;

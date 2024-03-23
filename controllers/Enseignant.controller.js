@@ -1,5 +1,3 @@
-
-
 const Enseignant = require('../models/Enseignant');
 
 const EnseignantController = {
@@ -31,16 +29,15 @@ const EnseignantController = {
   },
 
   createEnseignant: async (req, res) => {
-    const { nom, prenom, matiere, email } = req.body;
+    const { nom, prenom, email, cin, certificat } = req.body;
 
     try {
-      const dernierEnseignant = await Enseignant.findOne({}, {}, { sort: { 'enseignantId': -1 } });
       const nouvelEnseignant = await Enseignant.create({
-        enseignantId: dernierEnseignant ? dernierEnseignant.enseignantId + 1 : 1,
         nom,
         prenom,
-        matiere,
         email,
+        cin,
+        certificat,
       });
 
       res.status(201).json(nouvelEnseignant);
@@ -52,14 +49,15 @@ const EnseignantController = {
 
   updateEnseignant: async (req, res) => {
     const id = req.params.id;
-    const { nom, prenom, matiere, email } = req.body;
+    const { nom, prenom, email, cin, certificat } = req.body;
 
     try {
       const enseignantMaj = await Enseignant.findByIdAndUpdate(id, {
         nom,
         prenom,
-        matiere,
         email,
+        cin,
+        certificat,
       }, { new: true });
 
       if (enseignantMaj) {

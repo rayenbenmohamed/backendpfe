@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const etudiantSchema = new Schema({
-  etudiantId: {
-    type: Number,
-   
-  },
+ 
+  
   nom: {
     type: String,
     required: true,
@@ -46,6 +44,7 @@ const etudiantSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Compte',
   },
+
 });
 
 

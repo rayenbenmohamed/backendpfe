@@ -4,6 +4,9 @@ const router= express.Router();
  const CompteController=require('../controllers/Compte.controller');
 const Modulecontroller=require('../controllers/Module.controller');
 
+const { getModuleByToken } = require('../controllers/Etudiant.controller');
+const verifyToken = require('../middleware/auth');
+
 
  router.get('/etudiants',Etudiantcontroller.getAllEtudiants);
 
@@ -11,14 +14,17 @@ const Modulecontroller=require('../controllers/Module.controller');
 
  router.post('/etudiants',Etudiantcontroller.createEtudiant);
 
- router.put('/etudiants/:id',Etudiantcontroller.updateEtudiant);
-
+// Exemple de route PUT correctement définie
+router.put('/etudiants/:id',Etudiantcontroller.updateEtudiant);
+router.get('/modules', verifyToken, getModuleByToken);
  router.delete('/etudiants/:id',Etudiantcontroller.deleteEtudiant);
-
+ router.post('/etudiant/:id/compte', Etudiantcontroller.addCompteToEtudiant);
  router.put('/comptes/:id/activer', CompteController.activerCompte);
  router.get('/etudiants/formation/:compteId', Etudiantcontroller.getFormationByCompte);
  router.get('/etudiants/byCompte/:compteId', Etudiantcontroller.getEtudiantByCompte);
  router.get('/modules/byEtudiant/:etudiantId', Modulecontroller.getModulesByEtudiantId);
+ 
+
 
  router.post('/etudiants/:etudiantId/formations', Etudiantcontroller.addFormationToEtudiant);
 

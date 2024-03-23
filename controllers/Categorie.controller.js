@@ -1,7 +1,7 @@
-
 const Categorie = require('../models/Categorie');
 
 const CategorieController = {
+  // Other methods...const CategorieController = {
   getAllCategories: async (req, res) => {
     try {
       const categories = await Categorie.find();
@@ -30,12 +30,13 @@ const CategorieController = {
   },
 
   createCategorie: async (req, res) => {
-    const { nom, description } = req.body;
+    const { nom, description, image } = req.body;
 
     try {
       const nouvelleCategorie = await Categorie.create({
         nom,
         description,
+        image
       });
 
       res.status(201).json(nouvelleCategorie);
@@ -47,12 +48,16 @@ const CategorieController = {
 
   updateCategorie: async (req, res) => {
     const id = req.params.id;
-    const { nom, description } = req.body;
+    const { nom, description, image } = req.body;
 
     try {
       const categorieMaj = await Categorie.findByIdAndUpdate(
         id,
-        { nom, description },
+        {
+          nom,
+          description,
+          image
+        },
         { new: true }
       );
 
@@ -66,15 +71,14 @@ const CategorieController = {
       res.status(500).send('Erreur serveur');
     }
   },
-
   deleteCategorie: async (req, res) => {
     const id = req.params.id;
 
     try {
-      const categorieSupprime = await Categorie.findByIdAndDelete(id);
+      const categorieSupprimee = await Categorie.findByIdAndDelete(id);
 
-      if (categorieSupprime) {
-        res.status(200).json(categorieSupprime);
+      if (categorieSupprimee) {
+        res.status(200).json({ message: 'Catégorie supprimée avec succès', categorie: categorieSupprimee });
       } else {
         res.status(404).send('Catégorie non trouvée');
       }

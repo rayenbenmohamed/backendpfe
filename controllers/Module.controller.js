@@ -189,44 +189,33 @@ removeStudentFromGroup: async (req, res) => {
 
   
   
-  getModulesByEtudiantId: async (req, res) => {
-    const etudiantId = req.params.etudiantId;
-  
-    try {
-      const modules = await Module.find({ etudiants: etudiantId })
-        .populate({
-          path: 'etudiants',
-          populate: {
-            path: 'formations',
-            model: 'Formation',
-          },
-        })
-        .populate('enseignant')
-        .populate('emplois');
-  
-      const formattedModules = modules.map(module => ({
-        _id: module._id,
-        nomModule: module.nomModule,
-        enseignant: module.enseignant,
-        formations: module.etudiants.map(etudiant => etudiant.formations).flat().map(formation => ({
-          _id: formation._id,
-          nomformation: formation.nomformation,
-          duree: formation.duree,
-          description: formation.description,
-          prix: formation.prix,
-          image: formation.image,
-          niveau: formation.niveau,
-          categorie: formation.categorie,
-        })),
-        emplois: module.emplois,
-      }));
-  
-      res.status(200).json(formattedModules);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Erreur serveur');
-    }
-  },
+getModulesByEtudiantId: async (req, res) => {
+  const etudiantId = req.params.etudiantId;
+
+  try {
+    const modules = await Module.find({ etudiants: etudiantId })
+      .populate({
+        path: 'etudiants',
+        
+      })
+      .populate('enseignant')
+      .populate('emplois')
+      .populate('formations'); // Peupler les formations directement pour les modules
+
+    const formattedModules = modules.map(module => ({
+      _id: module._id,
+      nomModule: module.nomModule,
+      enseignant: module.enseignant,
+      formations: module.formations,
+      emplois: module.emplois,
+    }));
+
+    res.status(200).json(formattedModules);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erreur serveur');
+  }
+},
   
 
   deleteModule: async (req, res) => {

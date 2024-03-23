@@ -3,11 +3,7 @@ const mongoose = require('mongoose');
 
 
 const enseignantSchema = new mongoose.Schema({
-  enseignantId: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
+  
   nom: {
     type: String,
     required: true,
@@ -16,15 +12,23 @@ const enseignantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  matiere: {
-    type: String,
-    required: true,
-  },
+ 
   email: {
     type: String,
     required: true,
     unique: true,
   },
+  cin:{
+    type: String,
+    required: true,
+    unique: true,
+  },
+  certificat:{
+    type:String,
+    required: true,
+
+  }
+  
 });
 
 const Enseignant = mongoose.model('Enseignant', enseignantSchema);

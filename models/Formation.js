@@ -31,7 +31,7 @@ const formationSchema = new mongoose.Schema({
     ref: 'Categorie',
     required: true
   }
-});
+}); 
 
 const Formation = mongoose.model('Formation', formationSchema);
 

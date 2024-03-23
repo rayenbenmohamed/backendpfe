@@ -22,10 +22,9 @@ const moduleSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Formation'
   },
-  emplois: {
-    type: Schema.Types.ObjectId,
-    ref: 'Emploi'
-  },
+ 
+  
+
 });
 
 const Module = mongoose.model('Module', moduleSchema);
