@@ -1,18 +1,25 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-module.exports = function(req, res, next) {
-  const bearerHeader = req.header('Authorization');
-  if (!bearerHeader) return res.status(401).send('Accès refusé. Aucun token fourni.');
-
-  const token = bearerHeader.split(' ')[1]; // Supposer que le format est "Bearer [token]"
-  if (!token) return res.status(401).send('Accès refusé. Aucun token fourni.');
+const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1]; // Extraction du token de l'en-tête "Authorization"
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Accès refusé. Aucun token fourni.' });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (ex) {
-    res.status(400).send('Token invalide.');
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expiré.' });
+    } else if (error.name === 'JsonWebTokenError') {
+      return res.status(400).json({ message: 'Token invalide.' });
+    } else {
+      return res.status(500).json({ message: 'Erreur serveur.' });
+    }
   }
 };
+
+module.exports = authMiddleware;

@@ -22,6 +22,10 @@ const moduleSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Formation'
   },
+  emploi: {
+    type: Schema.Types.ObjectId,
+    ref: 'Emploi'
+  }
  
   
 

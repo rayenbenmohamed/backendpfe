@@ -41,38 +41,60 @@ exports.login = async (req, res) => {
   const { nomUtilisateur, motDePasse } = req.body;
 
   try {
-    // Recherche du compte correspondant au nom d'utilisateur
+    // Rechercher l'utilisateur par nom d'utilisateur
     const compte = await Compte.findOne({ nomUtilisateur });
-
     if (!compte) {
-      return res.status(400).send('Nom d\'utilisateur incorrect.');
+      return res.status(400).json({ message: "Nom d'utilisateur ou mot de passe incorrect." });
     }
 
-    // Vérification du mot de passe
+    // Vérifier le mot de passe
     const isMatch = await bcrypt.compare(motDePasse, compte.motDePasse);
-
     if (!isMatch) {
-      return res.status(400).send('Mot de passe incorrect.');
+      return res.status(400).json({ message: "Nom d'utilisateur ou mot de passe incorrect." });
     }
 
-    // Recherche de l'étudiant associé au compte
+    // Trouver l'étudiant associé à ce compte
     const etudiant = await Etudiant.findOne({ compte: compte._id });
 
+    // Si l'étudiant n'est pas trouvé, retourner un message d'erreur
     if (!etudiant) {
-      return res.status(404).send('Étudiant non trouvé.');
+      return res.status(404).json({ message: "Aucun étudiant trouvé pour ce compte." });
     }
 
-    // Récupération du module de l'étudiant
-    const module = await Module.findOne({ etudiants: etudiant._id });
+    // Récupérer les modules associés à l'étudiant
+    const module = await Module.findOne({ etudiants: etudiant._id }).exec();
 
-    if (!module) {
-      return res.status(404).send('Module non trouvé pour cet étudiant.');
+    // Générer le token JWT si la vérification est réussie
+    const token = jwt.sign(
+      { id: compte._id, role: compte.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } // Expiration en 1 heure
+    );
+
+    // Répondre avec le token, le module et les informations sur le compte
+    res.json({ token, module, compte: { nomUtilisateur: compte.nomUtilisateur, role: compte.role, estActive: compte.estActive } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur." });
+  }
+};
+
+
+exports.getModuleInfo = async (req, res) => {
+  try {
+    // Trouver l'étudiant associé au compte de l'utilisateur authentifié
+    const etudiant = await Etudiant.findOne({ compte: req.user.id }).populate('module');
+    if (!etudiant) {
+      return res.status(404).json({ message: 'Étudiant non trouvé.' });
     }
 
-    // Création du token JWT
-    const token = jwt.sign({ _id: compte._id, role: compte.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    // Si l'étudiant est trouvé mais n'a pas de module associé
+    if (!etudiant.module) {
+      return res.status(404).json({ message: 'Module non trouvé pour cet étudiant.' });
+    }
 
-    res.send({ token, module, etudiant  });
+    // Répondre avec les informations du module
+    res.json(etudiant.module);
   } catch (error) {
     console.error(error);
     res.status(500).send('Erreur serveur.');

@@ -18,7 +18,7 @@
     role: {
       type: String,
       enum: ['candidat', 'formateur', 'admin'],
-      default: 'candidat',
+      
     },
     token: {
       type: String,
