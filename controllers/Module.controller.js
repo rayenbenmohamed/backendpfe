@@ -2,8 +2,42 @@ const Module = require('../models/Module');
 const Enseignant = require('../models/Enseignant');
 const Formation = require('../models/Formation');
 const Etudiant = require('../models/Etudiant');
-
+const Presence = require('../models/Presence'); // Assurez-vous que le chemin est correct
 const ModuleController = {
+  // controllers/Module.controller.js (ou le nom que vous avez choisi)
+
+
+ajouterAbsences : async (req, res) => {
+  const { moduleId, date, etudiantsAbsents } = req.body; // ID du module, date de la session, et IDs des étudiants absents
+
+  try {
+    // Chercher un document de présence existant pour le module et la date spécifiés
+    let presence = await Presence.findOne({
+      module: moduleId,
+      date
+    });
+
+    if (presence) {
+      // Si un document existe déjà, mettre à jour la liste des étudiants absents
+      presence.etudiantsAbsents = etudiantsAbsents;
+      await presence.save();
+    } else {
+      // Si aucun document n'existe, créer un nouveau document de présence
+      presence = await Presence.create({
+        module: moduleId,
+        date,
+        etudiantsAbsents
+      });
+    }
+
+    res.status(201).json(presence);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erreur serveur lors de l\'ajout ou de la mise à jour des absences');
+  }
+},
+
   getAllModules: async (req, res) => {
     try {
       const modules = await Module.find()
@@ -18,6 +52,24 @@ const ModuleController = {
       res.status(500).send('Erreur serveur');
     }
   },
+  getModulesByEtudiantId: async (req, res) => {
+    const etudiantId = req.params.id;
+
+    try {
+      // Trouver les modules contenant l'ID de l'étudiant dans le tableau etudiants
+      const modules = await Module.find({ etudiants: etudiantId });
+
+      if (modules.length > 0) {
+        res.status(200).json(modules);
+      } else {
+        res.status(404).send('Aucun module trouvé pour cet étudiant.');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Erreur serveur.');
+    }
+  },
+
 
   getModuleById: async (req, res) => {
     const id = req.params.id;

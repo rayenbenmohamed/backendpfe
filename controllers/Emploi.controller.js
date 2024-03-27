@@ -1,7 +1,6 @@
 const Emploi = require('../models/Emploi');
 
 const emploiController = {
-  // Créer un emploi
   createEmploi: async (req, res) => {
     try {
       const nouvelEmploi = new Emploi(req.body);
@@ -12,7 +11,6 @@ const emploiController = {
     }
   },
 
-  // Lire tous les emplois
   getAllEmplois: async (req, res) => {
     try {
       const emplois = await Emploi.find();
@@ -22,7 +20,6 @@ const emploiController = {
     }
   },
 
-  // Lire un emploi par ID
   getEmploiById: async (req, res) => {
     try {
       const emploi = await Emploi.findById(req.params.id);
@@ -36,7 +33,6 @@ const emploiController = {
     }
   },
 
-  // Mettre à jour un emploi par ID
   updateEmploi: async (req, res) => {
     try {
       const emploiMaj = await Emploi.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -50,7 +46,6 @@ const emploiController = {
     }
   },
 
-  // Supprimer un emploi par ID
   deleteEmploi: async (req, res) => {
     try {
       const emploiSupprime = await Emploi.findByIdAndDelete(req.params.id);

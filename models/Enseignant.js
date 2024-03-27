@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-
+const Schema = mongoose.Schema;
 const enseignantSchema = new mongoose.Schema({
   
   nom: {
@@ -27,7 +27,13 @@ const enseignantSchema = new mongoose.Schema({
     type:String,
     required: true,
 
+  },
+
+  compte: {
+    type: Schema.Types.ObjectId,
+    ref: 'Compte',
   }
+
   
 });
 

@@ -9,5 +9,8 @@ router.get('/enseignants/:id', EnseignantController.getEnseignantById);
 router.post('/enseignants', EnseignantController.createEnseignant);
 router.put('/enseignants/:id', EnseignantController.updateEnseignant);
 router.delete('/enseignants/:id', EnseignantController.deleteEnseignant);
+router.put('/enseignants/:id/compte', EnseignantController.addCompteToEnseignant);
 
+
+router.delete('/enseignants/:id/compte', EnseignantController.deleteCompteFromEnseignant);
 module.exports = router;

@@ -9,6 +9,8 @@ router.put('/modules/:id', moduleController.updateModule);
 router.delete('/modules/:id', moduleController.deleteModule);
 router.post('/modules/:moduleId/addStudent/:etudiantId', moduleController.addStudentToGroup);
 router.delete('/modules/:moduleId/students/:etudiantId', moduleController.removeStudentFromGroup);
+router.get('/etudiants/:etudiantId/modules', moduleController.getModulesByEtudiantId);
+router.post('/modules/:moduleId/absences', moduleController.ajouterAbsences);
 
 
 module.exports = router;

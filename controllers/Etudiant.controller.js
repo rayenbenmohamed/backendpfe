@@ -119,34 +119,7 @@ const EtudiantController = {
     res.status(500).json({ message: 'Erreur serveur.' });
   }
   },
-  getModuleByToken : async (req, res) => {
-    const token = req.body;
-  
-    try {
-      // Vérifier le token
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      const compte = await Compte.findOne({ _id: decodedToken._id, token });
-  
-      if (!compte) {
-        return res.status(401).send('Non autorisé');
-      }
-  
-      // Récupérer l'étudiant associé à ce compte
-      const etudiant = await Etudiant.findOne({ compte: compte._id }).populate('formations');
-  
-      if (!etudiant) {
-        return res.status(404).send('Étudiant non trouvé');
-      }
-  
-      // Récupérer les informations du module
-      const modules = etudiant.formations.map(formation => formation.module);
-  
-      res.status(200).json(modules);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Erreur serveur');
-    }
-  },
+ 
   updateEtudiant: async (req, res) => {
     const id = req.params.id;
     const { nom, prenom, date_naissance, numTel, email, cin, niveauScolaire } = req.body;
@@ -193,6 +166,37 @@ const EtudiantController = {
         res.status(500).send('Erreur serveur');
     }
 },
+deleteCompteFromEtudiant: async (req, res) => {
+  const etudiantId = req.params.id; // L'ID de l'étudiant est passé dans l'URL
+
+  try {
+      const etudiant = await Etudiant.findById(etudiantId);
+      if (!etudiant) {
+          return res.status(404).send('Étudiant non trouvé');
+      }
+
+      const compteId = etudiant.compte; // Assumer que `compte` est l'ID du compte associé
+      if (!compteId) {
+          return res.status(404).send('Compte non trouvé pour cet étudiant');
+      }
+
+      // Supprimer le compte associé
+      await Compte.findByIdAndDelete(compteId);
+
+      // Option 1: Supprimer la référence au compte dans l'objet étudiant
+      etudiant.compte = null;
+      await etudiant.save();
+
+      // Option 2: Supprimer également l'étudiant si vous le souhaitez
+      // await Etudiant.findByIdAndDelete(etudiantId);
+
+      res.status(200).send('Compte et/ou étudiant supprimé avec succès');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Erreur serveur');
+  }
+},
+
 
 
   deleteEtudiant: async (req, res) => {

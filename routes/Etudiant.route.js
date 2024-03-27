@@ -23,10 +23,11 @@ router.put('/etudiants/:id',Etudiantcontroller.updateEtudiant);
  router.get('/etudiants/formation/:compteId', Etudiantcontroller.getFormationByCompte);
  router.get('/etudiants/byCompte/:compteId', Etudiantcontroller.getEtudiantByCompte);
 
- 
+ router.delete('/etudiant/:id/compte', Etudiantcontroller.deleteCompteFromEtudiant);
 
 
- router.post('/etudiants/:etudiantId/formations', Etudiantcontroller.addFormationToEtudiant);
+
+
 
  
 
