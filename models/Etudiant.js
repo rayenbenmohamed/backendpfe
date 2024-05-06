@@ -35,12 +35,7 @@ const etudiantSchema = new Schema({
     type: Number,
     
   },
-  formations: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Formation',
-    },
-  ],
+  
   compte: {
     type: Schema.Types.ObjectId,
     ref: 'Compte',

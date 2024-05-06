@@ -43,6 +43,10 @@ const moduleSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Absence'
   }],
+  notes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Note'
+  }],
  
   
 

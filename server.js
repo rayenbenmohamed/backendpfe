@@ -30,6 +30,8 @@ const FormationRoute = require('./routes/Formations.route');
 const ModuleRoute = require('./routes/Module.route');
 const AuthController = require('./routes/auth.routes');
 const absenceController=require('./routes/Absence.route')
+const noteRoutes = require('./routes/Note.route');
+
 //const PresenceRoute =require('./routes/Presence.routes');
 
 
@@ -41,6 +43,7 @@ app.use('/api/', CategorieRoute);
 app.use('/api/', FormationRoute);
 app.use('/api/', ModuleRoute);
 app.use('/api/', absenceController);
+app.use('/api', noteRoutes);
 //app.use('/api/', PresenceRoute);
 
 
